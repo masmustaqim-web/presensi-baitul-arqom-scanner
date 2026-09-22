@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,
+                 maximum-scale=1.0, user-scalable=no">
+
+  <title>Scanner QR — Presensi Baitul Arqom</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <script src="https://unpkg.com/html5-qrcode"
+          defer></script>
+
+  <style>
+    :root {
+      --navy: #061a34;
+      --navy2: #0b315a;
+      --green: #0b9a62;
+      --green2: #16c17b;
+      --white: #fff;
+      --muted: #b7c8dc;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Poppins, Arial, sans-serif;
+      background:
+        radial-gradient(
+          circle at 80% 0%,
+          rgba(22,193,123,.20),
+          transparent 35%
+        ),
+        linear-gradient(
+          145deg,
+          var(--navy),
+          #020c18
+        );
+      color: white;
+    }
+
+    body {
+      padding: 16px;
+    }
+
+    .app {
+      width: min(520px, 100%);
+      margin: 0 auto;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 15px;
+      background: white;
+      padding: 5px;
+      object-fit: contain;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .card {
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 22px;
+      background: rgba(7,29,58,.84);
+      padding: 16px;
+      box-shadow: 0 22px 55px rgba(0,0,0,.28);
+    }
+
+    .session {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: #dce9f5;
+    }
+
+    #reader {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #020912;
+      min-height: 300px;
+    }
+
+    #reader video {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    #reader__dashboard_section_csr,
+    #reader__dashboard_section_swaplink {
+      color: white !important;
+    }
+
+    #reader__dashboard_section_csr button,
+    #reader__dashboard_section_swaplink button {
+      border-radius: 10px !important;
+    }
+
+    .frame {
+      pointer-events: none;
+      position: relative;
+      margin-top: -300px;
+      height: 300px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .frame::before {
+      content: "";
+      width: min(65vw, 280px);
+      height: min(65vw, 280px);
+      max-width: 280px;
+      max-height: 280px;
+      border: 3px solid var(--green2);
+      border-radius: 22px;
+      box-shadow:
+        0 0 0 999px rgba(0,0,0,.13),
+        0 0 24px rgba(22,193,123,.55);
+    }
+
+    .message {
+      min-height: 48px;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      color: #dce9f5;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .message.success {
+      border: 1px solid rgba(22,193,123,.55);
+    }
+
+    .message.error {
+      border: 1px solid rgba(239,68,68,.60);
+    }
+
+    .back {
+      width: 100%;
+      margin-top: 12px;
+      background: rgba(255,255,255,.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 13px;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: -2px;
+      margin-right: 7px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <div class="top">
+      <img
+        class="logo"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Muhammadiyah_logo.svg/240px-Muhammadiyah_logo.svg.png"
+        alt="Muhammadiyah"
+        onerror="this.style.display='none'">
+
+      <div>
+        <h1>Scanner QR</h1>
+        <div class="meta">
+          Presensi Baitul Arqom
+        </div>
+      </div>
+    </div>
+
+
+    <section class="card">
+
+      <div class="session" id="sessionInfo">
+        Memuat sesi...
+      </div>
+
+      <div id="reader"></div>
+
+      <div class="frame"></div>
+
+      <div class="message" id="message">
+        <span class="loader"></span>
+        Menyiapkan kamera...
+      </div>
+
+      <button class="back"
+              type="button"
+              onclick="closeScanner()">
+        Tutup Scanner
+      </button>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    let html5QrCode = null;
+    let alreadySent = false;
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const kodeSesi =
+      (params.get('sesi') || '').trim();
+
+    const nonce =
+      (params.get('nonce') || '').trim();
+
+    const targetOrigin =
+      (params.get('targetOrigin') || '*').trim();
+
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+        document.getElementById(
+          'sessionInfo'
+        ).textContent =
+          kodeSesi
+            ? 'Sesi: ' + kodeSesi
+            : 'Sesi tidak diketahui';
+
+        waitForScannerLibrary();
+      }
+    );
+
+
+    function waitForScannerLibrary() {
+      if (typeof Html5Qrcode !== 'undefined') {
+        startCamera();
+        return;
+      }
+
+      setMessage(
+        '<span class="loader"></span>' +
+        'Memuat modul scanner...',
+        ''
+      );
+
+      setTimeout(
+        waitForScannerLibrary,
+        200
+      );
+    }
+
+
+    async function startCamera() {
+      if (!kodeSesi || !nonce) {
+        setMessage(
+          '❌ Parameter scanner tidak lengkap. Buka scanner dari halaman Presensi Baitul Arqom.',
+          'error'
+        );
+        return;
+      }
+
+      try {
+        html5QrCode =
+          new Html5Qrcode('reader');
+
+        const cameras =
+          await Html5Qrcode.getCameras();
+
+        if (!cameras || !cameras.length) {
+          throw new Error(
+            'Kamera tidak ditemukan.'
+          );
+        }
+
+        /*
+         * Prioritaskan kamera belakang jika label tersedia.
+         * Bila tidak, gunakan kamera pertama.
+         */
+        let selected =
+          cameras.find(camera =>
+            /back|rear|environment|belakang/i
+              .test(camera.label || '')
+          );
+
+        selected =
+          selected || cameras[0];
+
+        await html5QrCode.start(
+          selected.id,
+          {
+            fps: 10,
+            qrbox: function(viewfinderWidth, viewfinderHeight) {
+              const size =
+                Math.floor(
+                  Math.min(
+                    viewfinderWidth,
+                    viewfinderHeight
+                  ) * 0.68
+                );
+
+              return {
+                width: Math.max(180, size),
+                height: Math.max(180, size)
+              };
+            },
+            aspectRatio: 1.0,
+            disableFlip: true
+          },
+          onScanSuccess,
+          onScanFailure
+        );
+
+        setMessage(
+          '📷 Arahkan QR peserta ke kotak hijau. Sistem akan membaca otomatis.',
+          ''
+        );
+
+      } catch (err) {
+        console.error(err);
+
+        setMessage(
+          '❌ Kamera tidak dapat digunakan. Pastikan izin kamera diberikan dan halaman dibuka melalui HTTPS.',
+          'error'
+        );
+      }
+    }
+
+
+    function onScanSuccess(decodedText) {
+      if (alreadySent) return;
+
+      const nomorId =
+        String(decodedText || '').trim();
+
+      if (!nomorId) return;
+
+      alreadySent = true;
+
+      setMessage(
+        '⏳ QR terbaca: <strong>' +
+        escapeHtml(nomorId) +
+        '</strong><br>' +
+        'Mengirim hasil ke halaman presensi...',
+        ''
+      );
+
+      playBeep();
+
+      /*
+       * Kirim ke halaman Apps Script melalui window.opener.
+       * Apps Script akan memanggil google.script.run
+       * sehingga scanner eksternal tidak membutuhkan CORS
+       * atau akses langsung ke Google Sheets.
+       */
+      if (
+        window.opener &&
+        !window.opener.closed
+      ) {
+        window.opener.postMessage(
+          {
+            type: 'BA_QR_SCANNED',
+            nonce: nonce,
+            nomorId: nomorId
+          },
+          targetOrigin || '*'
+        );
+
+        setTimeout(() => {
+          closeScanner();
+        }, 450);
+
+      } else {
+        setMessage(
+          '❌ Halaman utama presensi tidak ditemukan. Jangan buka scanner secara langsung.',
+          'error'
+        );
+
+        alreadySent = false;
+      }
+    }
+
+
+    function onScanFailure(errorMessage) {
+      // Normal: QR belum berada pada posisi yang dapat dibaca.
+      // Jangan tampilkan error terus-menerus agar UI tidak berkedip.
+    }
+
+
+    async function closeScanner() {
+      try {
+        if (html5QrCode) {
+          const state =
+            html5QrCode.getState();
+
+          if (state === 2) {
+            await html5QrCode.stop();
+          }
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+
+      try {
+        window.close();
+      } catch (e) {}
+    }
+
+
+    function setMessage(html, type) {
+      const el =
+        document.getElementById('message');
+
+      el.innerHTML =
+        html;
+
+      el.className =
+        'message ' +
+        (type || '');
+    }
+
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+
+    function playBeep() {
+      try {
+        const AudioContext =
+          window.AudioContext ||
+          window.webkitAudioContext;
+
+        if (!AudioContext) return;
+
+        const ctx =
+          new AudioContext();
+
+        const osc =
+          ctx.createOscillator();
+
+        const gain =
+          ctx.createGain();
+
+        osc.frequency.value = 880;
+        gain.gain.value = 0.14;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+
+        setTimeout(() => {
+          osc.stop();
+
+          try {
+            ctx.close();
+          } catch (e) {}
+        }, 120);
+
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>

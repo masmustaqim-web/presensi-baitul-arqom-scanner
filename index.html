@@ -1,2496 +1,860 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Presensi Baitul Arqom
-  </title>
-
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-
-
-  <script
-    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
-  </script>
-
+  <title>Presensi Baitul Arqom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
     :root {
-
-      --navy:
-        #071d3a;
-
-      --navy-2:
-        #0b315e;
-
-      --green:
-        #0b8f5b;
-
-      --green-2:
-        #13b875;
-
-      --white:
-        #ffffff;
-
-      --muted:
-        #aabbd0;
-
-      --danger:
-        #ef4444;
-
-      --shadow:
-        0 20px 60px
-        rgba(0,0,0,.22);
-
-      --radius:
-        22px;
-
+      --navy: #2c368b;
+      --green: #04a54f;
+      --green-light: #4fffa4;
+      --dark-green: #03333b;
+      --white: #fff;
+      --muted: rgba(255,255,255,.78);
+      --glass: rgba(255,255,255,.10);
+      --glass-strong: rgba(255,255,255,.16);
+      --danger-bg: #f8d7da;
+      --danger-text: #842029;
+      --success-bg: #d1e7dd;
+      --success-text: #0f5132;
+      --mobile-side-padding: 10px;
+      --mobile-vertical-padding: 10px;
     }
 
+    * { box-sizing: border-box; }
 
-    * {
-      box-sizing: border-box;
-    }
-
+    html { min-height: 100%; }
 
     body {
-
       margin: 0;
-
       min-height: 100vh;
-
-      font-family:
-        Poppins,
-        sans-serif;
-
-      color:
-        white;
-
-      background:
-
-        radial-gradient(
-          circle at 10% 10%,
-          rgba(19,184,117,.20),
-          transparent 30%
-        ),
-
-        radial-gradient(
-          circle at 90% 20%,
-          rgba(11,49,94,.60),
-          transparent 35%
-        ),
-
-        linear-gradient(
-          135deg,
-          var(--navy),
-          #06152b 60%,
-          #041126
-        );
-
+      padding: var(--mobile-vertical-padding) var(--mobile-side-padding);
+      font-family: 'Poppins', sans-serif;
+      color: var(--white);
+      background: linear-gradient(180deg, rgb(44,54,139) 0%, rgb(4,165,79) 80%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
-
-    .container {
-
-      width:
-        min(1050px,94%);
-
-      margin:
-        auto;
-
-      padding:
-        28px 0 50px;
-
+    header {
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      padding: 5px;
     }
 
-
-    /* ==================================================
-       HERO
-       ================================================== */
-
-    .hero {
-
-      text-align:
-        center;
-
-      padding:
-        15px 10px 28px;
-
+    header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 8px;
     }
 
-
-    .logo {
-
-      width:
-        76px;
-
-      height:
-        76px;
-
-      object-fit:
-        contain;
-
-      margin-bottom:
-        10px;
-
-      filter:
-        drop-shadow(
-          0 8px 20px
-          rgba(0,0,0,.3)
-        );
-
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0,0,0,.4);
     }
 
-
-    .hero h1 {
-
-      margin: 0;
-
-      font-size:
-        clamp(
-          27px,
-          5vw,
-          42px
-        );
-
-      font-weight:
-        800;
-
-      letter-spacing:
-        -.7px;
-
+    main {
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto 5px;
+      padding: 15px;
+      background: rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.30);
+      text-align: center;
     }
 
-
-    .hero p {
-
-      margin:
-        8px 0 14px;
-
-      color:
-        var(--muted);
-
-      font-size:
-        14px;
-
+    label {
+      display: block;
+      margin-top: 15px;
+      text-align: left;
+      font-size: .9rem;
+      font-weight: 600;
     }
-
-
-    .badge {
-
-      display:
-        inline-flex;
-
-      align-items:
-        center;
-
-      gap:
-        7px;
-
-      padding:
-        7px 13px;
-
-      border-radius:
-        999px;
-
-      background:
-        rgba(11,143,91,.16);
-
-      border:
-        1px solid
-        rgba(19,184,117,.35);
-
-      color:
-        #72e6b4;
-
-      font-size:
-        12px;
-
-      font-weight:
-        600;
-
-    }
-
-
-    /* ==================================================
-       CARD
-       ================================================== */
-
-    .card {
-
-      background:
-
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.085),
-          rgba(255,255,255,.035)
-        );
-
-      border:
-        1px solid
-        rgba(255,255,255,.10);
-
-      border-radius:
-        var(--radius);
-
-      padding:
-        clamp(
-          18px,
-          4vw,
-          28px
-        );
-
-      box-shadow:
-        var(--shadow);
-
-      backdrop-filter:
-        blur(16px);
-
-    }
-
-
-    .label {
-
-      display:
-        block;
-
-      margin-bottom:
-        8px;
-
-      color:
-        #d8e5f4;
-
-      font-size:
-        13px;
-
-      font-weight:
-        600;
-
-    }
-
 
     select {
-
       width: 100%;
-
-      height:
-        50px;
-
-      padding:
-        0 15px;
-
-      border-radius:
-        14px;
-
-      border:
-        1px solid
-        rgba(255,255,255,.13);
-
-      background:
-        rgba(3,17,36,.75);
-
-      color:
-        white;
-
-      font-family:
-        inherit;
-
-      font-size:
-        14px;
-
-      outline:
-        none;
-
+      padding: 10px 38px 10px 10px;
+      margin: 8px 0 16px;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 1rem;
+      background: rgba(255,255,255,.92);
+      color: #333;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 18px;
     }
 
-
-    /* ==================================================
-       CAMERA
-       ================================================== */
-
-    .scanner {
-
-      margin-top:
-        20px;
-
-      display:
-        none;
-
-    }
-
-
-    .scanner.active {
-
-      display:
-        block;
-
-    }
-
-
-    .scanner-title {
-
-      margin-bottom:
-        10px;
-
-      font-size:
-        13px;
-
-      font-weight:
-        700;
-
-    }
-
-
-    .reader {
-
-      position:
-        relative;
-
-      width:
-        100%;
-
-      max-width:
-        620px;
-
-      margin:
-        auto;
-
-      aspect-ratio:
-        1 / 1;
-
-      overflow:
-        hidden;
-
-      border-radius:
-        20px;
-
-      background:
-        #020812;
-
-      border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    }
-
+    select:disabled { opacity: .65; }
 
     #reader {
-
-      position:
-        absolute;
-
-      inset:
-        0;
-
+      width: 100%;
+      aspect-ratio: 3 / 3;
+      min-height: 180px;
+      margin: 0 auto 15px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #333;
     }
 
+    #reader > * { max-width: 100%; }
 
     #reader video {
-
-      width:
-        100% !important;
-
-      height:
-        100% !important;
-
-      object-fit:
-        cover !important;
-
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      position: absolute !important;
+      inset: 0;
+      transform: none !important;
+      -webkit-transform: none !important;
+      transform-origin: center center !important;
     }
 
-
-    #reader img {
-
-      display:
-        none !important;
-
+    #reader video.mirror-mode {
+      transform: scaleX(-1) !important;
+      -webkit-transform: scaleX(-1) !important;
     }
 
+    #reader canvas { display: none !important; }
 
-    /* ==================================================
-       QR FRAME
-       ================================================== */
-
-    .qr-frame {
-
-      position:
-        absolute;
-
-      width:
-        62%;
-
-      aspect-ratio:
-        1 / 1;
-
-      left:
-        50%;
-
-      top:
-        50%;
-
-      transform:
-        translate(
-          -50%,
-          -50%
-        );
-
-      border:
-        3px solid
-        var(--green-2);
-
-      border-radius:
-        20px;
-
-      box-shadow:
-
-        0 0 0 9999px
-        rgba(0,0,0,.20),
-
-        0 0 28px
-        rgba(19,184,117,.42);
-
-      pointer-events:
-        none;
-
-      z-index:
-        10;
-
+    #reader::after {
+      content: "";
+      position: absolute;
+      z-index: 10;
+      top: 15%;
+      right: 15%;
+      bottom: 15%;
+      left: 15%;
+      border: 3px solid rgba(0,255,100,.8);
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,255,100,.5);
+      pointer-events: none;
     }
 
-
-    .corner {
-
-      position:
-        absolute;
-
-      width:
-        30px;
-
-      height:
-        30px;
-
-      border:
-        4px solid
-        white;
-
+    .camera-placeholder {
+      position: absolute;
+      z-index: 11;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      color: rgba(255,255,255,.8);
+      pointer-events: none;
     }
 
-
-    .tl {
-
-      left:
-        -3px;
-
-      top:
-        -3px;
-
-      border-right:
-        0;
-
-      border-bottom:
-        0;
-
+    .button-base {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px 25px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--green-light);
+      color: var(--dark-green);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,.2);
+      transition: .2s ease;
     }
 
-
-    .tr {
-
-      right:
-        -3px;
-
-      top:
-        -3px;
-
-      border-left:
-        0;
-
-      border-bottom:
-        0;
-
+    .button-base:hover {
+      background: #33d58d;
+      transform: translateY(-1px);
     }
 
-
-    .bl {
-
-      left:
-        -3px;
-
-      bottom:
-        -3px;
-
-      border-right:
-        0;
-
-      border-top:
-        0;
-
+    .button-base:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
     }
 
-
-    .br {
-
-      right:
-        -3px;
-
-      bottom:
-        -3px;
-
-      border-left:
-        0;
-
-      border-top:
-        0;
-
+    #btnRanking {
+      margin-top: 15px;
+      margin-bottom: 0;
+      background: #3498db;
+      color: #fff;
     }
 
-
-    /* ==================================================
-       CAMERA STATUS
-       ================================================== */
-
-    .camera-status {
-
-      position:
-        absolute;
-
-      left:
-        14px;
-
-      right:
-        14px;
-
-      bottom:
-        14px;
-
-      z-index:
-        20;
-
-      padding:
-        10px 13px;
-
-      border-radius:
-        12px;
-
-      background:
-        rgba(2,8,18,.80);
-
-      backdrop-filter:
-        blur(10px);
-
-      border:
-        1px solid
-        rgba(255,255,255,.10);
-
-      color:
-        var(--muted);
-
-      font-size:
-        11px;
-
-      text-align:
-        center;
-
-    }
-
-
-    /* ==================================================
-       BUTTONS
-       ================================================== */
-
-    .actions {
-
-      display:
-        grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap:
-        12px;
-
-      margin-top:
-        18px;
-
-    }
-
-
-    button {
-
-      min-height:
-        50px;
-
-      border:
-        0;
-
-      border-radius:
-        14px;
-
-      padding:
-        12px 18px;
-
-      font-family:
-        inherit;
-
-      font-size:
-        14px;
-
-      font-weight:
-        700;
-
-      cursor:
-        pointer;
-
-      transition:
-        .2s;
-
-    }
-
-
-    button:hover {
-
-      transform:
-        translateY(-2px);
-
-    }
-
-
-    .primary {
-
-      color:
-        white;
-
-      background:
-
-        linear-gradient(
-          135deg,
-          var(--green),
-          var(--green-2)
-        );
-
-      box-shadow:
-        0 10px 25px
-        rgba(11,143,91,.22);
-
-    }
-
-
-    .secondary {
-
-      color:
-        white;
-
-      background:
-        rgba(255,255,255,.08);
-
-      border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    }
-
-
-    /* ==================================================
-       STATUS
-       ================================================== */
-
-    .status {
-
-      margin-top:
-        16px;
-
-      padding:
-        13px 15px;
-
-      border-radius:
-        14px;
-
-      background:
-        rgba(0,0,0,.18);
-
-      color:
-        var(--muted);
-
-      font-size:
-        13px;
-
-      text-align:
-        center;
-
-    }
-
-
-    .status.success {
-
-      color:
-        #8af0c3;
-
-      background:
-        rgba(11,143,91,.12);
-
-    }
-
-
-    .status.error {
-
-      color:
-        #ffaaaa;
-
-      background:
-        rgba(239,68,68,.10);
-
-    }
-
-
-    /* ==================================================
-       INFO
-       ================================================== */
-
-    .info {
-
-      margin-top:
-        16px;
-
-      padding:
-        15px;
-
-      border-radius:
-        16px;
-
-      background:
-        rgba(7,29,58,.58);
-
-      border:
-        1px solid
-        rgba(255,255,255,.07);
-
-      color:
-        var(--muted);
-
-      font-size:
-        12px;
-
-      line-height:
-        1.7;
-
-    }
-
-
-    .info strong {
-
-      color:
-        white;
-
-    }
-
-
-    /* ==================================================
-       RANKING
-       ================================================== */
-
-    .ranking {
-
-      margin-top:
-        20px;
-
-      display:
-        none;
-
-    }
-
-
-    .ranking.show {
-
-      display:
-        block;
-
-    }
-
-
-    .ranking-header {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        space-between;
-
-      margin-bottom:
-        15px;
-
-    }
-
-
-    .ranking-header h2 {
-
-      margin:
-        0;
-
-      font-size:
-        18px;
-
-    }
-
-
-    .table-wrap {
-
-      overflow-x:
-        auto;
-
-      border-radius:
-        15px;
-
-      border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    }
-
-
-    table {
-
-      width:
-        100%;
-
-      min-width:
-        520px;
-
-      border-collapse:
-        collapse;
-
-      font-size:
-        13px;
-
-    }
-
-
-    th {
-
-      padding:
-        13px;
-
-      text-align:
-        left;
-
-      background:
-        rgba(0,0,0,.22);
-
-    }
-
-
-    td {
-
-      padding:
-        13px;
-
-      border-top:
-        1px solid
-        rgba(255,255,255,.06);
-
-      color:
-        var(--muted);
-
-    }
-
-
-    /* ==================================================
-       NOTIFICATION
-       ================================================== */
+    #btnRanking:hover { background: #2980b9; }
 
     .notification {
-
-      position:
-        fixed;
-
-      right:
-        20px;
-
-      bottom:
-        20px;
-
-      width:
-        min(
-          390px,
-          calc(100% - 40px)
-        );
-
-      padding:
-        15px 17px;
-
-      border-radius:
-        16px;
-
-      background:
-        #08213f;
-
-      border:
-        1px solid
-        rgba(255,255,255,.12);
-
-      box-shadow:
-        0 18px 45px
-        rgba(0,0,0,.35);
-
-      transform:
-        translateY(130px);
-
-      opacity:
-        0;
-
-      pointer-events:
-        none;
-
-      transition:
-        .3s;
-
-      z-index:
-        9999;
-
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: left;
+      box-shadow: inset 0 0 5px rgba(0,0,0,.1);
     }
 
-
-    .notification.show {
-
-      transform:
-        translateY(0);
-
-      opacity:
-        1;
-
+    .notification.success {
+      display: block;
+      background: var(--success-bg);
+      color: var(--success-text);
     }
 
-
-    .notification-title {
-
-      font-size:
-        14px;
-
-      font-weight:
-        700;
-
+    .notification.error {
+      display: block;
+      background: var(--danger-bg);
+      color: var(--danger-text);
     }
 
-
-    .notification-message {
-
-      margin-top:
-        3px;
-
-      color:
-        var(--muted);
-
-      font-size:
-        12px;
-
+    .notification.info {
+      display: block;
+      background: rgba(255,255,255,.16);
+      color: #fff;
     }
 
+    #ranking {
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      font-size: .9rem;
+    }
 
-    /* ==================================================
-       MOBILE
-       ================================================== */
+    #ranking::-webkit-scrollbar { width: 8px; }
+    #ranking::-webkit-scrollbar-track { background: rgba(255,255,255,.1); }
+    #ranking::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255,.5);
+      border-radius: 20px;
+    }
 
-    @media(
-      max-width:650px
-    ) {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+      font-size: .85rem;
+    }
 
-      .container {
+    table th, table td {
+      padding: 8px 4px;
+      border-bottom: 1px solid rgba(255,255,255,.3);
+    }
 
-        width:
-          92%;
+    table th {
+      text-align: left;
+      font-weight: 600;
+    }
 
+    footer {
+      width: 100%;
+      max-width: 450px;
+      padding: 5px 0 10px;
+      text-align: center;
+      color: #fff;
+      font-size: .8rem;
+      opacity: .8;
+    }
+
+    @media (min-width: 601px) {
+      body { padding: 15px 10px; }
+      header img { width: 100px; }
+      header h1 { font-size: 1.5rem; }
+      main {
+        border-radius: 20px;
+        margin-bottom: 15px;
       }
-
-
-      .actions {
-
-        grid-template-columns:
-          1fr;
-
-      }
-
-
-      .hero {
-
-        padding-top:
-          5px;
-
-      }
-
-
-      .reader {
-
-        border-radius:
-          16px;
-
-      }
-
     }
 
+    @media (max-width: 600px) {
+      main {
+        width: calc(100vw - (2 * var(--mobile-side-padding)));
+        max-width: none;
+      }
+    }
   </style>
-
 </head>
 
-
 <body>
-
-
-<div class="container">
-
-
-  <!-- ==================================================
-       HERO
-       ================================================== -->
-
-  <header class="hero">
-
+  <header>
     <img
-      class="logo"
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Muhammadiyah.svg/512px-Muhammadiyah.svg.png"
-      alt="Muhammadiyah"
-    >
-
-
-    <h1>
-      Presensi Baitul Arqom
-    </h1>
-
-
-    <p>
-      Sistem presensi QR terintegrasi Google Sheets
-    </p>
-
-
-    <div class="badge">
-      ● Sistem Aktif
-    </div>
-
+      src="https://aisyiyah.or.id/wp-content/uploads/2023/09/aisyiyah-putih.png"
+      alt="Logo Aisyiyah">
+    <h1>Presensi Baitul Arqom</h1>
   </header>
 
-
-  <!-- ==================================================
-       MAIN
-       ================================================== -->
-
-  <section class="card">
-
-
-    <label
-      class="label"
-      for="sessionSelect"
-    >
-      Pilih Sesi
-    </label>
-
-
-    <select
-      id="sessionSelect"
-    >
-
-      <option>
-        Memuat sesi...
-      </option>
-
+  <main>
+    <label for="kodeSesi">Pilih Sesi Kegiatan:</label>
+    <select id="kodeSesi" onchange="resetScanArea()">
+      <option value="" disabled selected>Memuat sesi...</option>
     </select>
 
+    <label for="cameraSelect">Pilih Kamera:</label>
+    <select id="cameraSelect" onchange="switchCamera()" disabled>
+      <option value="">Mendeteksi kamera...</option>
+    </select>
 
-    <!-- CAMERA -->
-
-    <div
-      id="scanner"
-      class="scanner"
-    >
-
-      <div class="scanner-title">
-        📷 Scanner QR
+    <label>Area Scan QR:</label>
+    <div id="reader">
+      <div id="cameraPlaceholder" class="camera-placeholder">
+        Kamera belum diaktifkan.<br>
+        Tekan <b>Mulai Scan QR</b> setelah memilih sesi.
       </div>
-
-
-      <div class="reader">
-
-
-        <div id="reader"></div>
-
-
-        <div class="qr-frame">
-
-          <div class="corner tl"></div>
-          <div class="corner tr"></div>
-          <div class="corner bl"></div>
-          <div class="corner br"></div>
-
-        </div>
-
-
-        <div
-          id="cameraStatus"
-          class="camera-status"
-        >
-          Kamera belum diaktifkan.
-        </div>
-
-
-      </div>
-
-    </div>
-
-
-    <!-- ACTION -->
-
-    <div class="actions">
-
-
-      <button
-        id="scanButton"
-        class="primary"
-        onclick="toggleScanner()"
-      >
-        📷 Mulai Scan QR
+      <button id="startScannerButton" class="button-base" onclick="startScanner()">
+        Mulai Scan QR
       </button>
-
-
-      <button
-        class="secondary"
-        onclick="lihatRanking()"
-      >
-        🏆 Lihat Ranking
-      </button>
-
-
     </div>
 
-
-    <div
-      id="status"
-      class="status"
-    >
-      Memuat aplikasi...
+    <div id="statusNotif" class="notification info">
+      Menghubungkan ke sistem...
     </div>
 
-
-    <div class="info">
-
-      <strong>Cara penggunaan:</strong><br>
-
-      Pilih sesi → aktifkan scanner → arahkan QR peserta
-      ke kotak hijau. Setelah berhasil, data langsung
-      dicatat ke Google Sheets dan scanner siap membaca
-      peserta berikutnya.
-
-    </div>
-
-
-  </section>
-
-
-  <!-- ==================================================
-       RANKING
-       ================================================== -->
-
-  <section
-    id="ranking"
-    class="card ranking"
-  >
-
-
-    <div class="ranking-header">
-
-      <h2>
-        🏆 Ranking Presensi
-      </h2>
-
-
-      <button
-        class="secondary"
-        onclick="tutupRanking()"
-        style="
-          min-height:40px;
-          padding:8px 13px;
-        "
-      >
-        Tutup
-      </button>
-
-    </div>
-
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>#</th>
-
-            <th>Nomor ID</th>
-
-            <th>Hadir</th>
-
-            <th>Persentase</th>
-
-          </tr>
-
-        </thead>
-
-
-        <tbody
-          id="rankingBody"
-        >
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  </section>
-
-
-</div>
-
-
-<!-- ====================================================
-     NOTIFICATION
-     ==================================================== -->
-
-<div
-  id="notification"
-  class="notification"
->
-
-  <div
-    id="notificationTitle"
-    class="notification-title"
-  >
-  </div>
-
-
-  <div
-    id="notificationMessage"
-    class="notification-message"
-  >
-  </div>
-
-</div>
-
-
-<!-- ====================================================
-     APPS SCRIPT BACKEND BRIDGE
-     ==================================================== -->
-
-<iframe
-  id="backendBridge"
-  src="https://script.google.com/macros/s/AKfycbw15dezQdalWum3aGAEveiACeks02_woewx3XWBA-v0dZl9RrZltU40gKe1DSFYPu2-/exec"
-  style="
-    position:fixed;
-    width:1px;
-    height:1px;
-    left:-10px;
-    bottom:-10px;
-    border:0;
-    opacity:0;
-    pointer-events:none;
-  "
-  aria-hidden="true"
-></iframe>
-
-
-<script>
-
-
-// ======================================================
-// KONFIGURASI
-// ======================================================
-
-const BACKEND_ORIGIN =
-  'https://script.google.com';
-
-
-// ======================================================
-// STATE
-// ======================================================
-
-let bridgeReady = false;
-
-let scanner = null;
-
-let scannerRunning = false;
-
-let processingScan = false;
-
-let lastScanned = '';
-
-let lastScanTime = 0;
-
-let notificationTimer = null;
-
-
-// ======================================================
-// DOM
-// ======================================================
-
-const bridge =
-  document.getElementById(
-    'backendBridge'
-  );
-
-
-const sessionSelect =
-  document.getElementById(
-    'sessionSelect'
-  );
-
-
-const scannerBox =
-  document.getElementById(
-    'scanner'
-  );
-
-
-const scanButton =
-  document.getElementById(
-    'scanButton'
-  );
-
-
-const cameraStatus =
-  document.getElementById(
-    'cameraStatus'
-  );
-
-
-const statusBox =
-  document.getElementById(
-    'status'
-  );
-
-
-// ======================================================
-// BACKEND MESSAGE
-// ======================================================
-
-window.addEventListener(
-  'message',
-  function(event) {
-
-
-    if (
-      event.origin !==
-      BACKEND_ORIGIN
-    ) {
-
-      return;
-
+    <button id="btnRanking" class="button-base" onclick="lihatRanking()">
+      📊 Lihat/Update Ranking Ketertiban
+    </button>
+
+    <div id="ranking"></div>
+  </main>
+
+  <footer>© MPKSDI PDM Wonosobo</footer>
+
+  <audio id="soundSuccess"
+    src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1f44f1d3e4.mp3?filename=success-1-6297.mp3"
+    preload="auto"></audio>
+  <audio id="soundError"
+    src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_12b2f9bbcb.mp3?filename=error-126627.mp3"
+    preload="auto"></audio>
+
+  <!--
+    ============================================================
+    BACKEND BRIDGE
+    Ganti URL di bawah dengan URL Web App Apps Script /exec.
+    Bridge dibuat tidak terlihat. Kamera TIDAK berada di iframe ini.
+    ============================================================
+  -->
+  <iframe
+    id="backendBridge"
+    src="https://script.google.com/macros/s/AKfycbw15dezQdalWum3aGAEveiACeks02_woewx3XWBA-v0dZl9RrZltU40gKe1DSFYPu2-/exec"
+    title="Backend Bridge"
+    style="
+      position:fixed;
+      width:1px;
+      height:1px;
+      left:-20px;
+      bottom:-20px;
+      border:0;
+      opacity:0;
+      pointer-events:none;
+    "
+    aria-hidden="true">
+  </iframe>
+
+  <script>
+    const soundSuccess = document.getElementById('soundSuccess');
+    const soundError = document.getElementById('soundError');
+    const statusNotif = document.getElementById('statusNotif');
+    const kodeSesiSelect = document.getElementById('kodeSesi');
+    const cameraSelect = document.getElementById('cameraSelect');
+    const rankingDiv = document.getElementById('ranking');
+    const readerDiv = document.getElementById('reader');
+    const startButton = document.getElementById('startScannerButton');
+    const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+    const bridge = document.getElementById('backendBridge');
+
+    let html5QrCode = null;
+    let isScanningActive = false;
+    let isProcessingScan = false;
+    let selectedCameraId = null;
+    let availableDevices = [];
+    let bridgeReady = false;
+    let bridgePingAttempts = 0;
+
+    function showNotif(msg, isError = false, type = null) {
+      statusNotif.textContent = msg;
+      statusNotif.className =
+        'notification ' + (type || (isError ? 'error' : 'success'));
+      statusNotif.style.display = 'block';
     }
 
-
-    if (
-      event.source !==
-      bridge.contentWindow
-    ) {
-
-      return;
-
+    function playSound(audio) {
+      try {
+        audio.currentTime = 0;
+        const p = audio.play();
+        if (p && p.catch) p.catch(() => {});
+      } catch (_) {}
     }
 
+    function findQrVideoElement() {
+      return readerDiv.querySelector('video');
+    }
 
-    const data =
-      event.data || {};
+    function postToBridge(message) {
+      if (!bridge || !bridge.contentWindow) {
+        showNotif('❌ Backend Bridge tidak tersedia.', true);
+        return false;
+      }
 
+      bridge.contentWindow.postMessage(message, '*');
+      return true;
+    }
 
-    // ================================================
-    // BRIDGE READY
-    // ================================================
+    function requestSessions() {
+      if (!bridgeReady) {
+        showNotif('⏳ Menunggu koneksi backend...', false, 'info');
+        return;
+      }
 
-    if (
-      data.type ===
-      'BA_BRIDGE_READY'
-    ) {
+      console.log('[APP] Meminta daftar sesi...');
+      postToBridge({ type: 'BA_GET_SESSIONS' });
+    }
 
-      bridgeReady =
-        true;
+    function requestRanking() {
+      postToBridge({ type: 'BA_GET_RANKING' });
+    }
 
+    function handleBridgeMessage(event) {
+      if (!bridge || event.source !== bridge.contentWindow) return;
 
-      sendToBackend({
-        type:
-          'BA_GET_SESSIONS'
+      const origin = event.origin || '';
+      if (
+        origin !== 'https://script.google.com' &&
+        !origin.endsWith('.googleusercontent.com')
+      ) {
+        return;
+      }
+
+      const data = event.data || {};
+      console.log('[BRIDGE]', data.type, data);
+
+      if (data.type === 'BA_BRIDGE_READY') {
+        bridgeReady = true;
+        showNotif('✅ Terhubung ke sistem presensi.', false);
+        requestSessions();
+        return;
+      }
+
+      if (data.type === 'BA_SESSIONS_RESULT') {
+        if (!data.success) {
+          showNotif(
+            '❌ Gagal memuat jadwal sesi: ' +
+            (data.message || 'Kesalahan tidak diketahui'),
+            true
+          );
+          return;
+        }
+
+        const sessions = Array.isArray(data.data) ? data.data : [];
+        populateSessions(sessions);
+        return;
+      }
+
+      if (data.type === 'BA_ATTENDANCE_RESULT') {
+        handleAttendanceResult(data);
+        return;
+      }
+
+      if (data.type === 'BA_RANKING_RESULT') {
+        if (!data.success) {
+          showNotif(
+            '❌ Gagal mengambil ranking: ' +
+            (data.message || 'Kesalahan tidak diketahui'),
+            true
+          );
+          if (html5QrCode && isScanningActive) html5QrCode.resume();
+          return;
+        }
+
+        tampilkanRanking(data.data || []);
+      }
+    }
+
+    window.addEventListener('message', handleBridgeMessage);
+
+    function populateSessions(sessions) {
+      kodeSesiSelect.innerHTML = '';
+
+      if (!sessions.length) {
+        kodeSesiSelect.innerHTML =
+          '<option value="" disabled selected>Belum ada sesi pada Jadwal</option>';
+        showNotif('⚠️ Belum ada sesi pada sheet Jadwal.', true);
+        return;
+      }
+
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      placeholder.textContent = 'Pilih sesi kegiatan';
+      kodeSesiSelect.appendChild(placeholder);
+
+      sessions.forEach(session => {
+        const option = document.createElement('option');
+        option.value = session.kode || '';
+        option.textContent =
+          `${session.nama || session.kode || 'Sesi'}${session.waktu ? ' (' + session.waktu + ')' : ''}`;
+        kodeSesiSelect.appendChild(option);
       });
 
-
-      return;
-
-    }
-
-
-    // ================================================
-    // SESSIONS
-    // ================================================
-
-    if (
-      data.type ===
-      'BA_SESSIONS_RESULT'
-    ) {
-
-      if (
-        data.success
-      ) {
-
-        renderSessions(
-          data.data
-        );
-
-      } else {
-
-        setStatus(
-          data.message ||
-          'Gagal memuat sesi.',
-          'error'
-        );
-
-      }
-
-
-      return;
-
-    }
-
-
-    // ================================================
-    // ATTENDANCE
-    // ================================================
-
-    if (
-      data.type ===
-      'BA_ATTENDANCE_RESULT'
-    ) {
-
-      handleAttendanceResult(
-        data
-      );
-
-
-      return;
-
-    }
-
-
-    // ================================================
-    // RANKING
-    // ================================================
-
-    if (
-      data.type ===
-      'BA_RANKING_RESULT'
-    ) {
-
-      if (
-        data.success
-      ) {
-
-        renderRanking(
-          data.data
-        );
-
-      } else {
-
-        notify(
-          'Gagal',
-          data.message ||
-          'Ranking gagal dimuat.',
-          'error'
-        );
-
-      }
-
-
-      return;
-
-    }
-
-  }
-);
-
-
-// ======================================================
-// SEND BACKEND
-// ======================================================
-
-function sendToBackend(
-  data
-) {
-
-  if (
-    !bridgeReady
-  ) {
-
-    return;
-
-  }
-
-
-  bridge.contentWindow.postMessage(
-    data,
-    BACKEND_ORIGIN
-  );
-
-}
-
-
-// ======================================================
-// RENDER SESSIONS
-// ======================================================
-
-function renderSessions(
-  sessions
-) {
-
-  sessionSelect.innerHTML =
-    '<option value="">-- Pilih Sesi --</option>';
-
-
-  if (
-    !sessions ||
-    !sessions.length
-  ) {
-
-    setStatus(
-      'Belum ada sesi pada sheet Jadwal.',
-      'error'
-    );
-
-    return;
-
-  }
-
-
-  sessions.forEach(
-    function(session) {
-
-      const option =
-        document.createElement(
-          'option'
-        );
-
-
-      option.value =
-        session.kode;
-
-
-      option.textContent =
-        session.kode +
-        ' — ' +
-        session.nama +
-        (
-          session.waktu
-            ? ' (' +
-              session.waktu +
-              ')'
-            : ''
-        );
-
-
-      sessionSelect.appendChild(
-        option
-      );
-
-    }
-  );
-
-
-  setStatus(
-    'Pilih sesi untuk memulai presensi.',
-    ''
-  );
-
-}
-
-
-// ======================================================
-// TOGGLE SCANNER
-// ======================================================
-
-async function toggleScanner() {
-
-
-  if (
-    scannerRunning
-  ) {
-
-    await stopScanner();
-
-    return;
-
-  }
-
-
-  const kodeSesi =
-    sessionSelect.value;
-
-
-  if (!kodeSesi) {
-
-    notify(
-      'Sesi belum dipilih',
-      'Silakan pilih sesi terlebih dahulu.',
-      'error'
-    );
-
-    return;
-
-  }
-
-
-  scannerBox.classList.add(
-    'active'
-  );
-
-
-  try {
-
-    await startScanner();
-
-  } catch (error) {
-
-    console.error(
-      error
-    );
-
-
-    setCameraStatus(
-      error.message ||
-      'Kamera gagal diaktifkan.'
-    );
-
-
-    notify(
-      'Kamera gagal',
-      error.message ||
-      'Tidak dapat mengakses kamera.',
-      'error'
-    );
-
-  }
-
-}
-
-
-// ======================================================
-// START CAMERA
-// ======================================================
-
-async function startScanner() {
-
-
-  if (
-    scannerRunning
-  ) {
-
-    return;
-
-  }
-
-
-  setCameraStatus(
-    'Meminta izin kamera...'
-  );
-
-
-  scanner =
-    new Html5Qrcode(
-      'reader'
-    );
-
-
-  const cameras =
-    await Html5Qrcode.getCameras();
-
-
-  if (
-    !cameras ||
-    !cameras.length
-  ) {
-
-    throw new Error(
-      'Kamera tidak ditemukan.'
-    );
-
-  }
-
-
-  const rear =
-    cameras.find(
-      camera => {
-
-        const label =
-          String(
-            camera.label || ''
-          ).toLowerCase();
-
-
-        return (
-          label.includes('back') ||
-          label.includes('rear') ||
-          label.includes('environment') ||
-          label.includes('belakang')
-        );
-
-      }
-    );
-
-
-  const cameraId =
-    rear
-      ? rear.id
-      : cameras[0].id;
-
-
-  await scanner.start(
-
-    cameraId,
-
-    {
-
-      fps: 10,
-
-      qrbox:
-        function(
-          width,
-          height
-        ) {
-
-          const size =
-            Math.floor(
-              Math.min(
-                width,
-                height
-              ) * .62
-            );
-
-
-          return {
-
-            width:
-              size,
-
-            height:
-              size
-
-          };
-
-        },
-
-      aspectRatio:
-        1.0,
-
-      disableFlip:
+      showNotif(
+        `✅ ${sessions.length} sesi berhasil dimuat. Silakan pilih sesi.`,
         false
-
-    },
-
-
-    onScanSuccess,
-
-    function() {}
-
-  );
-
-
-  scannerRunning =
-    true;
-
-
-  processingScan =
-    false;
-
-
-  scanButton.textContent =
-    '⏹ Hentikan Scanner';
-
-
-  setCameraStatus(
-    'Kamera aktif • Arahkan QR ke kotak hijau.'
-  );
-
-
-  setStatus(
-    'Scanner aktif. Silakan scan QR peserta.',
-    ''
-  );
-
-}
-
-
-// ======================================================
-// QR SUCCESS
-// ======================================================
-
-function onScanSuccess(
-  decodedText
-) {
-
-
-  if (
-    processingScan
-  ) {
-
-    return;
-
-  }
-
-
-  const text =
-    String(
-      decodedText || ''
-    ).trim();
-
-
-  if (!text) {
-
-    return;
-
-  }
-
-
-  const now =
-    Date.now();
-
-
-  if (
-    text === lastScanned &&
-    now - lastScanTime < 3000
-  ) {
-
-    return;
-
-  }
-
-
-  lastScanned =
-    text;
-
-
-  lastScanTime =
-    now;
-
-
-  processingScan =
-    true;
-
-
-  setCameraStatus(
-    '✓ QR terbaca • Menyimpan...'
-  );
-
-
-  setStatus(
-    'Menyimpan presensi ' +
-    text +
-    '...',
-    ''
-  );
-
-
-  notify(
-    'QR Terbaca',
-    'Menyimpan presensi ' + text,
-    'success'
-  );
-
-
-  playSuccessSound();
-
-
-  sendToBackend({
-
-    type:
-      'BA_RECORD_ATTENDANCE',
-
-    nomorId:
-      text,
-
-    kodeSesi:
-      sessionSelect.value
-
-  });
-
-}
-
-
-// ======================================================
-// ATTENDANCE RESULT
-// ======================================================
-
-function handleAttendanceResult(
-  result
-) {
-
-
-  processingScan =
-    false;
-
-
-  if (
-    result.success
-  ) {
-
-    setCameraStatus(
-      '✓ Presensi berhasil'
-    );
-
-
-    setStatus(
-      result.message +
-      (
-        result.timestamp
-          ? ' • ' +
-            result.timestamp
-          : ''
-      ),
-      'success'
-    );
-
-
-    notify(
-      '✓ Presensi Berhasil',
-      result.message +
-      (
-        result.timestamp
-          ? ' • ' +
-            result.timestamp
-          : ''
-      ),
-      'success'
-    );
-
-
-    playSuccessSound();
-
-
-    return;
-
-  }
-
-
-  if (
-    result.duplicate
-  ) {
-
-    setCameraStatus(
-      '⚠ Presensi sudah tercatat'
-    );
-
-
-    setStatus(
-      result.message,
-      'error'
-    );
-
-
-    notify(
-      '⚠ Duplikat',
-      result.message,
-      'error'
-    );
-
-
-    playErrorSound();
-
-
-    return;
-
-  }
-
-
-  setCameraStatus(
-    'Presensi gagal'
-  );
-
-
-  setStatus(
-    result.message ||
-    'Presensi gagal.',
-    'error'
-  );
-
-
-  notify(
-    'Presensi Gagal',
-    result.message ||
-    'Presensi gagal.',
-    'error'
-  );
-
-
-  playErrorSound();
-
-}
-
-
-// ======================================================
-// STOP CAMERA
-// ======================================================
-
-async function stopScanner() {
-
-
-  try {
-
-    if (
-      scanner &&
-      scannerRunning
-    ) {
-
-      await scanner.stop();
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      error
-    );
-
-  }
-
-
-  scannerRunning =
-    false;
-
-
-  processingScan =
-    false;
-
-
-  scanner =
-    null;
-
-
-  scanButton.textContent =
-    '📷 Mulai Scan QR';
-
-
-  setCameraStatus(
-    'Kamera dihentikan.'
-  );
-
-
-  setStatus(
-    'Scanner dihentikan.',
-    ''
-  );
-
-}
-
-
-// ======================================================
-// CAMERA STATUS
-// ======================================================
-
-function setCameraStatus(
-  message
-) {
-
-  cameraStatus.textContent =
-    message;
-
-}
-
-
-// ======================================================
-// STATUS
-// ======================================================
-
-function setStatus(
-  message,
-  type
-) {
-
-  statusBox.textContent =
-    message;
-
-
-  statusBox.className =
-    'status' +
-    (
-      type
-        ? ' ' + type
-        : ''
-    );
-
-}
-
-
-// ======================================================
-// NOTIFICATION
-// ======================================================
-
-function notify(
-  title,
-  message,
-  type
-) {
-
-  const box =
-    document.getElementById(
-      'notification'
-    );
-
-
-  document.getElementById(
-    'notificationTitle'
-  ).textContent =
-    title;
-
-
-  document.getElementById(
-    'notificationMessage'
-  ).textContent =
-    message;
-
-
-  box.classList.add(
-    'show'
-  );
-
-
-  clearTimeout(
-    notificationTimer
-  );
-
-
-  notificationTimer =
-    setTimeout(
-      function() {
-
-        box.classList.remove(
-          'show'
-        );
-
-      },
-      4000
-    );
-
-}
-
-
-// ======================================================
-// RANKING
-// ======================================================
-
-function lihatRanking() {
-
-  document
-    .getElementById(
-      'ranking'
-    )
-    .classList.add(
-      'show'
-    );
-
-
-  document
-    .getElementById(
-      'rankingBody'
-    )
-    .innerHTML = `
-      <tr>
-        <td colspan="4"
-            style="text-align:center">
-          Menghitung ranking...
-        </td>
-      </tr>
-    `;
-
-
-  sendToBackend({
-
-    type:
-      'BA_GET_RANKING'
-
-  });
-
-}
-
-
-// ======================================================
-// RENDER RANKING
-// ======================================================
-
-function renderRanking(
-  data
-) {
-
-  const body =
-    document.getElementById(
-      'rankingBody'
-    );
-
-
-  if (
-    !data ||
-    !data.length
-  ) {
-
-    body.innerHTML = `
-      <tr>
-        <td colspan="4"
-            style="text-align:center">
-          Belum ada data.
-        </td>
-      </tr>
-    `;
-
-    return;
-
-  }
-
-
-  body.innerHTML =
-    data.map(
-      item => `
-
-        <tr>
-
-          <td>
-            ${escapeHtml(
-              item.peringkat
-            )}
-          </td>
-
-          <td>
-            ${escapeHtml(
-              item.id
-            )}
-          </td>
-
-          <td>
-            ${escapeHtml(
-              item.hadir
-            )}
-          </td>
-
-          <td>
-            ${
-              (
-                Number(
-                  item.persentase ||
-                  0
-                ) * 100
-              ).toFixed(2)
-            }%
-          </td>
-
-        </tr>
-
-      `
-    ).join('');
-
-}
-
-
-// ======================================================
-// CLOSE RANKING
-// ======================================================
-
-function tutupRanking() {
-
-  document
-    .getElementById(
-      'ranking'
-    )
-    .classList.remove(
-      'show'
-    );
-
-}
-
-
-// ======================================================
-// ESCAPE HTML
-// ======================================================
-
-function escapeHtml(
-  value
-) {
-
-  return String(
-    value ?? ''
-  )
-
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-
-    .replace(
-      /</g,
-      '&lt;'
-    )
-
-    .replace(
-      />/g,
-      '&gt;'
-    )
-
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-
-    .replace(
-      /'/g,
-      '&#039;'
-    );
-
-}
-
-
-// ======================================================
-// AUDIO
-// ======================================================
-
-function playTone(
-  frequency,
-  duration,
-  type = 'sine'
-) {
-
-  try {
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-
-    if (!AudioContext) {
-      return;
-    }
-
-
-    const ctx =
-      new AudioContext();
-
-
-    const oscillator =
-      ctx.createOscillator();
-
-
-    const gain =
-      ctx.createGain();
-
-
-    oscillator.type =
-      type;
-
-
-    oscillator.frequency.value =
-      frequency;
-
-
-    gain.gain.setValueAtTime(
-      .001,
-      ctx.currentTime
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-      .18,
-      ctx.currentTime + .02
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-      .001,
-      ctx.currentTime + duration
-    );
-
-
-    oscillator.connect(
-      gain
-    );
-
-
-    gain.connect(
-      ctx.destination
-    );
-
-
-    oscillator.start();
-
-
-    oscillator.stop(
-      ctx.currentTime +
-      duration
-    );
-
-  } catch (e) {}
-
-}
-
-
-function playSuccessSound() {
-
-  playTone(
-    880,
-    .10
-  );
-
-
-  setTimeout(
-    () => {
-
-      playTone(
-        1175,
-        .14
       );
+    }
 
-    },
-    100
-  );
+    function populateCameraSelect(devices) {
+      availableDevices = devices || [];
+      cameraSelect.innerHTML = '';
 
-}
+      if (!availableDevices.length) {
+        cameraSelect.innerHTML =
+          '<option value="">Tidak ada kamera ditemukan</option>';
+        cameraSelect.disabled = true;
+        showNotif('❌ Tidak ada kamera ditemukan di perangkat ini.', true);
+        return;
+      }
 
+      cameraSelect.disabled = false;
+      let defaultId = null;
 
-function playErrorSound() {
+      availableDevices.forEach(device => {
+        const label = device.label || `Kamera ${device.id.substring(0, 4)}...`;
+        const lower = label.toLowerCase();
+        const option = document.createElement('option');
+        option.value = device.id;
 
-  playTone(
-    240,
-    .20,
-    'square'
-  );
+        if (
+          lower.includes('back') ||
+          lower.includes('rear') ||
+          lower.includes('environment') ||
+          lower.includes('belakang')
+        ) {
+          option.textContent = `Kamera Belakang: ${label.replace(/[()]/g, '')}`;
+          if (!defaultId) defaultId = device.id;
+        } else if (
+          lower.includes('front') ||
+          lower.includes('user') ||
+          lower.includes('depan')
+        ) {
+          option.textContent = `Kamera Depan: ${label.replace(/[()]/g, '')}`;
+        } else {
+          option.textContent = label;
+        }
 
-}
+        cameraSelect.appendChild(option);
+      });
 
-</script>
+      selectedCameraId = defaultId || availableDevices[0].id;
+      cameraSelect.value = selectedCameraId;
 
+      if (bridgeReady && kodeSesiSelect.value) {
+        showNotif('Pilih kamera lalu tekan "Mulai Scan QR".');
+      }
+    }
 
+    function switchCamera() {
+      const newCameraId = cameraSelect.value;
+      if (!newCameraId || newCameraId === selectedCameraId) return;
+
+      selectedCameraId = newCameraId;
+
+      if (isScanningActive) {
+        stopScanner()
+          .then(() => startScanningProcess(selectedCameraId))
+          .catch(err => {
+            showNotif('❌ Gagal mengganti kamera: ' + err, true);
+            startButton.style.display = 'block';
+          });
+      }
+    }
+
+    function startScanningProcess(cameraId) {
+      const device = availableDevices.find(d => d.id === cameraId);
+      const label = device ? (device.label || '').toLowerCase() : '';
+      const facingMode =
+        (label.includes('back') ||
+         label.includes('rear') ||
+         label.includes('environment') ||
+         label.includes('belakang'))
+          ? 'environment'
+          : 'user';
+
+      html5QrCode.start(
+        cameraId,
+        {
+          fps: 10,
+          aspectRatio: 1.0,
+          disableFlip: true
+        },
+        onScanSuccess,
+        onScanFailure
+      )
+      .then(() => {
+        isScanningActive = true;
+        cameraPlaceholder.style.display = 'none';
+        showNotif('✅ Kamera aktif. Siap untuk scan.', false);
+
+        setTimeout(() => {
+          const video = findQrVideoElement();
+          if (!video) return;
+
+          if (facingMode === 'user') {
+            video.classList.add('mirror-mode');
+          } else {
+            video.classList.remove('mirror-mode');
+          }
+        }, 300);
+      })
+      .catch(err => {
+        isScanningActive = false;
+        cameraPlaceholder.style.display = 'flex';
+        startButton.style.display = 'block';
+        showNotif(
+          '❌ Gagal memulai kamera. Pastikan izin kamera diberikan: ' + err,
+          true
+        );
+      });
+    }
+
+    function stopScanner() {
+      if (!isScanningActive || !html5QrCode) {
+        return Promise.resolve();
+      }
+
+      return html5QrCode.stop()
+        .then(() => {
+          isScanningActive = false;
+          cameraPlaceholder.style.display = 'flex';
+          readerDiv.querySelectorAll('video').forEach(v => {
+            v.classList.remove('mirror-mode');
+          });
+          readerDiv.querySelectorAll('canvas').forEach(c => c.remove());
+
+          readerDiv.innerHTML = `
+            <div id="cameraPlaceholder" class="camera-placeholder">
+              Kamera belum diaktifkan.<br>
+              Tekan <b>Mulai Scan QR</b> setelah memilih sesi.
+            </div>
+            <button id="startScannerButton" class="button-base" onclick="startScanner()">
+              Mulai Scan QR
+            </button>
+          `;
+
+          cameraPlaceholder = document.getElementById('cameraPlaceholder');
+          startButton = document.getElementById('startScannerButton');
+        })
+        .catch(err => {
+          console.error('Error stopping scanner:', err);
+          isScanningActive = false;
+        });
+    }
+
+    function startScanner() {
+      if (!kodeSesiSelect.value) {
+        showNotif('⚠️ Pilih sesi kegiatan terlebih dahulu.', true);
+        return;
+      }
+
+      if (isScanningActive) return;
+
+      if (!selectedCameraId) {
+        showNotif('⚠️ Kamera belum siap.', true);
+        return;
+      }
+
+      rankingDiv.style.display = 'none';
+      showNotif('⏳ Memuat kamera dan meminta izin...', false, 'info');
+      startButton.style.display = 'none';
+
+      if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode('reader');
+      }
+
+      startScanningProcess(selectedCameraId);
+    }
+
+    function resetScanArea() {
+      stopScanner().then(() => {
+        rankingDiv.style.display = 'none';
+        if (kodeSesiSelect.value) {
+          showNotif('✅ Sesi dipilih. Tekan "Mulai Scan QR".');
+        }
+      });
+    }
+
+    function onScanSuccess(qrCodeMessage) {
+      if (isProcessingScan) return;
+
+      const nomorId = String(qrCodeMessage || '').trim();
+      const kodeSesi = kodeSesiSelect.value;
+
+      if (!nomorId) return;
+
+      if (!kodeSesi) {
+        showNotif('⚠️ Pilih sesi kegiatan terlebih dahulu.', true);
+        return;
+      }
+
+      isProcessingScan = true;
+
+      if (html5QrCode && isScanningActive) {
+        try { html5QrCode.pause(true); } catch (_) {}
+      }
+
+      showNotif('⏳ Memproses ID: ' + nomorId + '...', false, 'info');
+
+      postToBridge({
+        type: 'BA_RECORD_ATTENDANCE',
+        nomorId: nomorId,
+        kodeSesi: kodeSesi
+      });
+    }
+
+    function handleAttendanceResult(res) {
+      isProcessingScan = false;
+
+      if (res && res.success) {
+        playSound(soundSuccess);
+        showNotif(res.message || '✅ Presensi berhasil.', false);
+      } else {
+        playSound(soundError);
+        showNotif(
+          (res && res.message) || '❌ Presensi gagal.',
+          true
+        );
+      }
+
+      setTimeout(() => {
+        if (html5QrCode && isScanningActive) {
+          try { html5QrCode.resume(); } catch (_) {}
+        }
+      }, res && res.success ? 2500 : 3500);
+    }
+
+    function onScanFailure(_) {
+      // Normal: html5-qrcode memanggil callback ini terus-menerus
+      // ketika belum menemukan QR.
+    }
+
+    function lihatRanking() {
+      if (isScanningActive && html5QrCode) {
+        try { html5QrCode.pause(true); } catch (_) {}
+      }
+
+      showNotif('⏳ Memperbarui ranking...', false, 'info');
+      requestRanking();
+    }
+
+    function tampilkanRanking(data) {
+      if (!data || !data.length) {
+        rankingDiv.innerHTML =
+          '<p>Belum ada data ranking absensi.</p>';
+        rankingDiv.style.display = 'block';
+        if (html5QrCode && isScanningActive) {
+          try { html5QrCode.resume(); } catch (_) {}
+        }
+        return;
+      }
+
+      let html =
+        '<table>' +
+        '<tr>' +
+        '<th>Rank</th>' +
+        '<th>ID</th>' +
+        '<th>Jumlah Sesi</th>' +
+        '<th>% Tertib</th>' +
+        '</tr>';
+
+      data.forEach(row => {
+        const rank = row.peringkat ?? row[0] ?? '';
+        const id = row.id ?? row[1] ?? '';
+        const hadir = row.hadir ?? row[2] ?? '';
+        const persen = row.persentase ?? row[3] ?? '';
+
+        html +=
+          `<tr><td>${escapeHtml(rank)}</td>` +
+          `<td>${escapeHtml(id)}</td>` +
+          `<td>${escapeHtml(hadir)}</td>` +
+          `<td>${escapeHtml(persen)}</td></tr>`;
+      });
+
+      html += '</table>';
+
+      rankingDiv.innerHTML = html;
+      rankingDiv.style.display = 'block';
+
+      showNotif('✅ Ranking berhasil diperbarui.', false);
+
+      if (html5QrCode && isScanningActive) {
+        try { html5QrCode.resume(); } catch (_) {}
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function detectCameras() {
+      Html5Qrcode.getCameras()
+        .then(devices => {
+          populateCameraSelect(devices);
+        })
+        .catch(err => {
+          console.error('[CAMERA]', err);
+          cameraSelect.innerHTML =
+            '<option value="">Gagal deteksi kamera</option>';
+          cameraSelect.disabled = true;
+          showNotif(
+            '❌ Gagal mendapatkan daftar kamera. Pastikan izin kamera tersedia.',
+            true
+          );
+        });
+    }
+
+    function pingBridge() {
+      bridgePingAttempts++;
+
+      if (bridgePingAttempts > 10 && !bridgeReady) {
+        showNotif(
+          '❌ Backend belum terhubung. Pastikan URL Apps Script /exec benar.',
+          true
+        );
+        return;
+      }
+
+      postToBridge({ type: 'BA_BRIDGE_PING' });
+
+      if (!bridgeReady) {
+        setTimeout(pingBridge, 1000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      detectCameras();
+      setTimeout(pingBridge, 700);
+    });
+  </script>
 </body>
-
 </html>
